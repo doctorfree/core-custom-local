@@ -1,7 +1,7 @@
 #!/bin/bash
 PKG="core-custom-local"
 PKG_NAME="core-custom-local"
-PKG_VER="1.0"
+PKG_VER="1.0.1"
 TOP="usr"
 DESTDIR="${TOP}/local"
 SRC=${HOME}/src
