@@ -30,4 +30,3 @@ run-build:
   artifacts:
     paths:
       - dist/*.deb
-      - dist/*.gz
