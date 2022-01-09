@@ -1,11 +1,24 @@
 #!/bin/bash
 PKG="core-custom-local"
 PKG_NAME="core-custom-local"
-PKG_VER="1.0.1"
 TOP="usr"
 DESTDIR="${TOP}/local"
 SRC=${HOME}/src
 SUDO=sudo
+
+[ -f "${SRC}/${PKG_NAME}/VERSION" ] || {
+  [ -f "/builds/doctorfree/${PKG_NAME}/VERSION" ] || {
+    echo "$SRC/$PKG_NAME/VERSION does not exist. Exiting."
+    exit 1
+  }
+  SRC="/builds/doctorfree"
+  SUDO=
+  GCI=1
+}
+
+. "${SRC}/${PKG_NAME}/VERSION"
+PKG_VER=${VERSION}
+PKG_REL=${RELEASE}
 
 # Subdirectory in which to create the distribution files
 OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
@@ -31,7 +44,7 @@ echo "Package: ${PKG}
 Version: ${PKG_VER}
 Section: misc
 Priority: optional
-Architecture: armhf
+Architecture: all
 Depends:
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Build-Depends: debhelper (>= 11)
@@ -42,22 +55,23 @@ Description: Custom package to hold /usr/local as a recognized installation fold
 
 chmod 644 ${OUT_DIR}/DEBIAN/control
 
-for dir in "${TOP}" "${DESTDIR}" "${TOP}/share" "${TOP}/share/doc" \
-           "${TOP}/share/doc/${PKG}" "${DESTDIR}/bin" "${DESTDIR}/etc" \
+for dir in "${TOP}" "${DESTDIR}" "${DESTDIR}/share" \
+           "${DESTDIR}/share/doc" "${DESTDIR}/bin" "${DESTDIR}/etc" \
            "${DESTDIR}/games" "${DESTDIR}/include" "${DESTDIR}/lib" \
-           "${DESTDIR}/sbin" "${DESTDIR}/share" "${DESTDIR}/src"
+           "${DESTDIR}/sbin" "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/src"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
 done
 
-${SUDO} cp Install ${OUT_DIR}/${TOP}/share/doc/${PKG}/Install
-${SUDO} cp Uninstall ${OUT_DIR}/${TOP}/share/doc/${PKG}/Uninstall
-${SUDO} cp AUTHORS ${OUT_DIR}/${TOP}/share/doc/${PKG}/AUTHORS
-${SUDO} cp LICENSE ${OUT_DIR}/${TOP}/share/doc/${PKG}/copyright
-${SUDO} cp CHANGELOG.md ${OUT_DIR}/${TOP}/share/doc/${PKG}/changelog
-${SUDO} cp README.md ${OUT_DIR}/${TOP}/share/doc/${PKG}/README
-${SUDO} gzip -9 ${OUT_DIR}/${TOP}/share/doc/${PKG}/changelog
+${SUDO} cp Install ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/Install
+${SUDO} cp Uninstall ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/Uninstall
+${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
+${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/copyright
+${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README
+${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
 
 cd dist
-${SUDO} dpkg-deb --build ${PKG_NAME}_${PKG_VER}
+echo "Building ${PKG_NAME}_${PKG_VER}-${PKG_REL} package"
+${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
