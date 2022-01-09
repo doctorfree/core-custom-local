@@ -9,7 +9,7 @@ SRC="${HOME}/src"
   exit 1
 }
 
-. "${SRC}/${SRC_NAME}/VERSION"
+. "${SRC}/${PKG_NAME}/VERSION"
 PKG_VER=${VERSION}
 PKG_REL=${RELEASE}
 PKG_PRE="${PKG_NAME}_${PKG_VER}-${PKG_REL}"
