@@ -55,10 +55,14 @@ Description: Custom package to hold /usr/local as a recognized installation fold
 
 chmod 644 ${OUT_DIR}/DEBIAN/control
 
-for dir in "${TOP}" "${DESTDIR}" "${DESTDIR}/share" \
+for dir in "${TOP}" "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/doc" "${DESTDIR}/bin" "${DESTDIR}/etc" \
            "${DESTDIR}/games" "${DESTDIR}/include" "${DESTDIR}/lib" \
-           "${DESTDIR}/sbin" "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/src"
+           "${DESTDIR}/sbin" "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/src" \
+           "${DESTDIR}/share/man/man1" "${DESTDIR}/share/man/man2" \
+           "${DESTDIR}/share/man/man3" "${DESTDIR}/share/man/man4" \
+           "${DESTDIR}/share/man/man5" "${DESTDIR}/share/man/man6" \
+           "${DESTDIR}/share/man/man7" "${DESTDIR}/share/man/man8"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}

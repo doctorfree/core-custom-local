@@ -1,0 +1,13 @@
+# Ignore develop, tmp, dist and releases folders
+dist/*
+releases/*
+develop/*
+tmp/*
+
+# vim files
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+
+browse-artifacts.txt
